@@ -5,7 +5,7 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This is the Tester project for teaching Networking and API Handling in Flutter.
 
 A few resources to get you started if this is your first Flutter project:
 
