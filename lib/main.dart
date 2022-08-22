@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:numbers_trivia/services/numbers_api.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,6 +30,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final NumbersApi _numbersApi = NumbersApi();
+  dynamic number;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,62 +42,83 @@ class _MyHomePageState extends State<MyHomePage> {
           title: const Text('Numbers Trivia'),
         ),
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             // Container for the Trivia Text
-            Container(
-              margin: const EdgeInsets.all(20),
-              child: const Text(
-                // textAlign:  TextAlign.center,
-                'This is the placeholder for the trivia interesting fact',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-
-            // Container for the textfield and button
-            Container(
-                margin: const EdgeInsets.all(20),
-                child: TextField(
-                  decoration: InputDecoration(
-                      label: const Text('Input a Number'),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20))),
-                )),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color?>(
-                            Colors.green[900]),
-                      ),
-                      onPressed: () {},
-                      child: const Text('Search'),
+            Expanded(
+              flex: 1,
+              child: Container(
+                child: Center(
+                  child: Text(
+                    'This is the $number for the trivia interesting facts',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                          textStyle: MaterialStateProperty.all<TextStyle>(
-                              const TextStyle(color: Colors.blue)),
-                          backgroundColor: MaterialStateProperty.all<Color?>(
-                              Colors.grey[300]),
-                        ),
-                        onPressed: () {},
-                        child: const Text('Get Random Trivia')),
-                  ),
-                ),
-              ],
+              ),
             ),
+            Expanded(
+              flex: 2,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 50),
+                child: Column(
+                  children: [
+                    TextField(
+                      decoration: InputDecoration(
+                          label: const Text('Input a Number'),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20))),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color?>(
+                                        Colors.green[900]),
+                              ),
+                              onPressed: () {
+                                setState(() async {
+                                  final response =
+                                      await _numbersApi.getRandomNumbersFact();
+                                  number = response[0].toString();
+                                });
+                              },
+                              child: const Text('Search'),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                                style: ButtonStyle(
+                                  textStyle:
+                                      MaterialStateProperty.all<TextStyle>(
+                                          const TextStyle(color: Colors.black)),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color?>(
+                                          Colors.grey[600]),
+                                ),
+                                onPressed: () {},
+                                child: const Text('Get Random Trivia')),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            )
+
+            // Container for the textfield and button
           ],
         ));
   }
