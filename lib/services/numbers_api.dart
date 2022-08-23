@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:numbers_trivia/models/model.dart';
 
 class NumbersApi {
   final http.Client _client = http.Client();
@@ -10,6 +11,7 @@ class NumbersApi {
   };
 
   Future<Map<String, dynamic>> getRandomNumbersFact() async {
+    // NumberModel model = NumberModel();
     print('Called!');
     dynamic response;
     try {
@@ -21,6 +23,8 @@ class NumbersApi {
     }
     var jsonResponse = json.decode(response.body);
     print('This is the json response $jsonResponse');
-    return jsonResponse;
+    return jsonResponse.then((value) {
+      return NumberModel.fromMap(value);
+    });
   }
 }
