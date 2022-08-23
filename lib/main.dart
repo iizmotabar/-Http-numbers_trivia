@@ -30,8 +30,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int number = 0;
+  String text = '';
+  @override
+  void initState() {
+    final response = _numbersApi.getRandomNumbersFact();
+    setState(() {
+      response.then((value) async {
+        number = await value['number'];
+        text = await value['text'];
+      }, onError: (error) {
+        print('This is the error $error');
+      });
+    });
+
+    super.initState();
+  }
+
   final NumbersApi _numbersApi = NumbersApi();
-  dynamic number;
 
   @override
   Widget build(BuildContext context) {
@@ -48,15 +64,14 @@ class _MyHomePageState extends State<MyHomePage> {
               flex: 1,
               child: Container(
                 child: Center(
-                  child: Text(
-                    'This is the $number for the trivia interesting facts',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    child: Text(
+                  ' $text',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
                   ),
-                ),
+                )),
               ),
             ),
             Expanded(
@@ -85,10 +100,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                         Colors.green[900]),
                               ),
                               onPressed: () {
-                                setState(() async {
-                                  final response =
-                                      await _numbersApi.getRandomNumbersFact();
-                                  number = response[0].toString();
+                                final response =
+                                    _numbersApi.getRandomNumbersFact();
+                                setState(() {
+                                  response.then((value) {
+                                    number = value['number'];
+                                    text = value['text'];
+                                  }, onError: (error) {
+                                    print('This is the error $error');
+                                  });
                                 });
                               },
                               child: const Text('Search'),
@@ -107,7 +127,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                       MaterialStateProperty.all<Color?>(
                                           Colors.grey[600]),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  NumbersApi().getRandomNumbersFact();
+                                },
                                 child: const Text('Get Random Trivia')),
                           ),
                         ),

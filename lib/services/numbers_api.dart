@@ -9,18 +9,18 @@ class NumbersApi {
     'Param1': 'json',
   };
 
-  Future<String> getRandomNumbersFact() async {
+  Future<Map<String, dynamic>> getRandomNumbersFact() async {
     print('Called!');
-    dynamic response = '';
+    dynamic response;
     try {
       response = await _client.get(Uri.parse(_baseUrl), headers: {
         'Content-Type': 'application/json',
       });
-      print(response.body);
     } catch (e) {
-      print(e.toString());
+      print('This is the error : $e');
     }
     var jsonResponse = json.decode(response.body);
+    print('This is the json response $jsonResponse');
     return jsonResponse;
   }
 }
