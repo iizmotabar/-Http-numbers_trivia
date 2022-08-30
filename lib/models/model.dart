@@ -29,8 +29,8 @@ class NumberModel {
 
   factory NumberModel.fromMap(Map<String, dynamic> map) {
     return NumberModel(
-      text: map['text'] as String,
-      number: map['number'] as int,
+      text: map['text'],
+      number: map['number'],
     );
   }
 
