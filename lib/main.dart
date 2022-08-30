@@ -34,15 +34,15 @@ class _MyHomePageState extends State<MyHomePage> {
   String text = '';
   @override
   void initState() {
-    final response = _numbersApi.getRandomNumbersFact();
-    setState(() {
-      response.then((value) async {
-        number = await value['number'];
-        text = await value['text'];
-      }, onError: (error) {
-        print('This is the error $error');
-      });
-    });
+    // final response = _numbersApi.getRandomNumbersFact();
+    // setState(() {
+    //   response.then((value) async {
+    //     number = await value['number'];
+    //     text = await value['text'];
+    //   }, onError: (error) {
+    //     print('This is the error $error');
+    //   });
+    // });
 
     super.initState();
   }

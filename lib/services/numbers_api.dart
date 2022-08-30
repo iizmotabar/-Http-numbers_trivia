@@ -11,7 +11,6 @@ class NumbersApi {
 
   Future<Map<String, dynamic>> getRandomNumbersFact() async {
     // NumberModel model = NumberModel();
-    print('Called!');
     dynamic response;
     try {
       response = await _client.get(Uri.parse(_baseUrl), headers: {
