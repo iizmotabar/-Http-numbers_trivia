@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:numbers_trivia/models/model.dart';
 import 'package:numbers_trivia/services/numbers_api.dart';
 
 void main() {
@@ -30,24 +31,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController textFieldController = TextEditingController();
   int number = 0;
   String text = '';
   @override
   void initState() {
-    final response = _numbersApi.getRandomNumbersFact();
-    setState(() {
-      response.then((value) async {
-        number = await value['number'];
-        text = await value['text'];
-      }, onError: (error) {
-        print('This is the error $error');
-      });
-    });
-
+    callForData();
     super.initState();
   }
 
   final NumbersApi _numbersApi = NumbersApi();
+  void callForData() async {
+    final response = await _numbersApi.getRandomNumbersFact();
+    setState(() {
+      number = NumberModel.fromMap(response).number!.toInt();
+      text = NumberModel.fromMap(response).text.toString();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Column(
                   children: [
                     TextField(
+                      controller: textFieldController,
                       decoration: InputDecoration(
                           label: const Text('Input a Number'),
                           border: OutlineInputBorder(
@@ -99,16 +100,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                     MaterialStateProperty.all<Color?>(
                                         Colors.green[900]),
                               ),
-                              onPressed: () {
+                              onPressed: () async {
                                 final response =
-                                    _numbersApi.getRandomNumbersFact();
+                                    await _numbersApi.getSpecificNumberFact(
+                                        textFieldController.text.toString());
                                 setState(() {
-                                  response.then((value) {
-                                    number = value['number'];
-                                    text = value['text'];
-                                  }, onError: (error) {
-                                    print('This is the error $error');
-                                  });
+                                  number = NumberModel.fromMap(response)
+                                      .number!
+                                      .toInt();
+                                  text = NumberModel.fromMap(response)
+                                      .text
+                                      .toString();
                                 });
                               },
                               child: const Text('Search'),
@@ -127,8 +129,19 @@ class _MyHomePageState extends State<MyHomePage> {
                                       MaterialStateProperty.all<Color?>(
                                           Colors.grey[600]),
                                 ),
-                                onPressed: () {
-                                  NumbersApi().getRandomNumbersFact();
+                                onPressed: () async {
+                                  final response =
+                                      await _numbersApi.getRandomNumbersFact();
+                                  setState(() {
+                                    number = NumberModel.fromMap(response)
+                                        .number!
+                                        .toInt();
+                                    text = NumberModel.fromMap(response)
+                                        .text
+                                        .toString();
+                                  });
+
+                                  // print(response);
                                 },
                                 child: const Text('Get Random Trivia')),
                           ),
